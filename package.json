@@ -19,7 +19,10 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.1.6",
-    "react": "^18.2.0",
-    "react-native": "^0.74.5"
+    "react": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-vision-camera": "^4.6.3",
+    "react-native-webrtc": "^124.0.4",
+    "react-use-websocket": "^4.11.1"
   }
 }
