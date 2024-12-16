@@ -6,6 +6,7 @@ import BlogHeaderAvatar from "./custom/prod/BlogHeaderAvatar"; // jeff update #4
 // Custom views
 import CustomView from "./custom/dev/views/CustomView";
 import CustomCamera from "./custom/dev/views/CustomCamera";
+import MessagesFiltersCustom from "./custom/dev/views/MessagesFiltersCustom";
 
 // Extra Modal
 import Modal from "react-native-modal";
@@ -25,7 +26,16 @@ export const applyCustomCode = (externalCodeSetup: any) => {
         topicSingleApi,
         indexJsApi,
         navigationApi,
+        filterScreenApiHooks,
     } = externalCodeSetup;
+
+    messagesScreenApi.setFetchParamsFilter((props) => {
+        return {
+            ...props,
+            per_page: 1,
+            search: "hello",
+        };
+    });
 
     navigationApi.addNavigationRoute(
         "persistentview",
@@ -34,7 +44,9 @@ export const applyCustomCode = (externalCodeSetup: any) => {
         "All" // "Auth" | "noAuth" | "Main" | "All"
     );
 
-	navigationApi.addNavigationRoute(
+    filterScreenApiHooks.setAfterFilterComponent(MessagesFiltersCustom);
+
+    navigationApi.addNavigationRoute(
         "customcamera",
         "customcamera",
         CustomCamera,
@@ -68,28 +80,29 @@ export const applyCustomCode = (externalCodeSetup: any) => {
     //
     // ############################################################## //
 
-
-
     messagesSingleScreenApi.setActionsFilter((buttonConfig) => {
-        //
-
-        //
-
         const [isModalVisible, setModalVisible] = useState(false);
-
         const toggleModal = () => {
             setModalVisible(!isModalVisible);
         };
-
         // Get state of auth to get the token
         const allState = useSelector((state) => state);
         const auth = useSelector((state) => state.auth);
-
         const user = useSelector((state) => state.user);
         const thread = useSelector((state) => state.thread);
-
         const navigation = useNavigation();
         const route = useRoute();
+
+        // Push new changes
+        navigation.setOptions({
+            headerLeft: () => (
+                <Button
+                    title="Add"
+                    onPress={() => console.log("Add clicked!")}
+                />
+            ),
+        });
+
         const newButton = {
             flow: [
                 {
@@ -134,7 +147,7 @@ export const applyCustomCode = (externalCodeSetup: any) => {
                                 navigation.navigate("persistentview");
                             },
                         },
-						{
+                        {
                             icon: { fontIconName: "video", weight: "400" },
                             label: "customcamera",
                             isNavigation: true, //If set to true, the button will not be set to a "loading" state
